@@ -1,0 +1,142 @@
+/* =========================================
+   PLAYER — DESKTOP
+========================================= */
+
+@media (min-width: 769px) {
+  .card {
+    transform:
+      translate(150px, 210px) !important;
+  }
+}
+
+/* =========================================
+   CHAT — 1200px A 1800px
+
+   Pasa del lado derecho al izquierdo.
+========================================= */
+
+@media (min-width: 1200px) and (max-width: 1800px) {
+  #smonk-chat {
+    left: 55px !important;
+    right: auto !important;
+  }
+}
+
+/* =========================================
+   CHAT — TABLET / LAPTOP
+   769px A 1199px
+
+   Pasa debajo del player.
+========================================= */
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  #smonk-chat {
+    position: absolute !important;
+
+    left: 50% !important;
+    right: auto !important;
+
+    top: 850px !important;
+
+    transform:
+      translateX(-50%) !important;
+
+    width:
+      calc(100vw - 28px) !important;
+
+    max-width: 430px !important;
+    height: 380px !important;
+
+    margin: 0 !important;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  body {
+    background-attachment:
+      scroll !important;
+
+    background-size:
+      270% 110vh !important;
+
+    background-position:
+      63% center !important;
+
+    background-repeat:
+      no-repeat !important;
+
+    background-color:
+      #07080c !important;
+  }
+
+  #content {
+    padding-top: 0 !important;
+  }
+
+  .card {
+    width:
+      calc(100vw - 28px) !important;
+
+    padding: 16px !important;
+
+    border-radius: 16px !important;
+
+    transform:
+      translate(0, 180px) !important;
+
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .card-title {
+    padding-right: 85px !important;
+
+    font-size: 17px !important;
+
+    line-height: 1.2 !important;
+  }
+
+  #smonk-live {
+    top: 18px !important;
+    right: 18px !important;
+  }
+
+  footer {
+    position: relative !important;
+
+    transform:
+      translateY(180px) !important;
+
+    width: 100% !important;
+
+    text-align: center !important;
+
+    opacity: 0.55 !important;
+
+    font-size: 10px !important;
+  }
+
+  #smonk-chat {
+    position: absolute !important;
+
+    left: 50% !important;
+
+    top: 720px !important;
+
+    transform:
+      translateX(-50%) !important;
+
+    width:
+      calc(100vw - 28px) !important;
+
+    max-width: 430px !important;
+
+    height: 380px !important;
+
+    margin: 0 !important;
+  }
+}

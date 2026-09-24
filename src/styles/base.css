@@ -1,0 +1,28 @@
+:root {
+  --smonk-red: #ed142d;
+  --smonk-red-soft: rgba(237, 20, 45, 0.35);
+  --smonk-white: #f8f5ed;
+  --smonk-dark: #09090c;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  background-attachment: scroll !important;
+  background-position: center top !important;
+  min-height: 100vh;
+}
+
+#content {
+  position: relative;
+  z-index: 2;
+}
+
+footer {
+  opacity: 0.25 !important;
+  font-size: 9px !important;
+}

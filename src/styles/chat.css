@@ -1,0 +1,362 @@
+/* =========================================
+   SMONK RADIO CHAT
+========================================= */
+
+#smonk-chat {
+  position: fixed;
+
+  width: 360px;
+  height: 470px;
+
+  right: 55px;
+  left: auto;
+
+  top: 60%;
+  transform: translateY(-50%);
+
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(8, 9, 13, 0.88);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45);
+
+  color: white;
+
+  z-index: 50;
+}
+
+/* ==============================
+   HEADER
+============================== */
+
+.smonk-chat-header {
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 18px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.08);
+}
+
+.smonk-chat-header > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.smonk-chat-header strong {
+  font-size: 13px;
+  letter-spacing: 0.8px;
+}
+
+.smonk-chat-dot {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: #ff3b30;
+
+  box-shadow:
+    0 0 10px rgba(255, 59, 48, 0.8);
+}
+
+/* ==============================
+   EDIT NICKNAME
+============================== */
+
+#smonk-change-name {
+  display: none;
+
+  width: 34px;
+  height: 34px;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.12);
+
+  border-radius: 9px;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+  color:
+    rgba(255, 255, 255, 0.75);
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+#smonk-change-name:hover {
+  background:
+    rgba(255, 255, 255, 0.1);
+
+  color: white;
+
+  transform: scale(1.05);
+}
+
+#smonk-change-name svg {
+  display: block;
+}
+
+/* ==============================
+   BACK
+============================== */
+
+#smonk-back-chat {
+  width: 100%;
+
+  margin-top: 10px;
+  padding: 10px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.15);
+
+  border-radius: 10px;
+
+  background: transparent;
+
+  color:
+    rgba(255, 255, 255, 0.75);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+#smonk-back-chat:hover {
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  color: white;
+}
+
+/* ==============================
+   LOGIN
+============================== */
+
+#smonk-chat-login {
+  padding: 35px 25px;
+}
+
+.smonk-chat-welcome {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  margin-bottom: 25px;
+}
+
+.smonk-chat-welcome strong {
+  font-size: 20px;
+}
+
+.smonk-chat-welcome span {
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+#smonk-nickname {
+  width: 100%;
+
+  padding: 13px 15px;
+
+  border-radius: 10px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.15);
+
+  background:
+    rgba(255, 255, 255, 0.07);
+
+  color: white;
+
+  outline: none;
+}
+
+#smonk-enter-chat {
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 12px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #e3342f;
+
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+#smonk-login-error {
+  margin-top: 10px;
+
+  color: #ff6b6b;
+
+  font-size: 12px;
+}
+
+/* ==============================
+   CHAT ROOM
+============================== */
+
+#smonk-chat-room {
+  flex: 1;
+  min-height: 0;
+}
+
+#smonk-chat-room:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==============================
+   MESSAGES
+============================== */
+
+#smonk-messages {
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+
+  padding: 15px 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.smonk-message {
+  max-width: 85%;
+
+  padding: 9px 12px;
+
+  border-radius:
+    5px 13px 13px 13px;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  align-self: flex-start;
+}
+
+.smonk-message-me {
+  align-self: flex-end;
+
+  border-radius:
+    13px 5px 13px 13px;
+
+  background:
+    rgba(227, 52, 47, 0.28);
+}
+
+.smonk-message-name {
+  font-size: 11px;
+  font-weight: 700;
+
+  margin-bottom: 3px;
+
+  color: #ff665f;
+}
+
+.smonk-message-text {
+  font-size: 13px;
+
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+.smonk-message-time {
+  margin-top: 4px;
+
+  font-size: 9px;
+
+  text-align: right;
+
+  opacity: 0.45;
+}
+
+/* ==============================
+   INPUT
+============================== */
+
+#smonk-chat-form {
+  display: flex;
+
+  gap: 8px;
+
+  padding: 12px;
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.08);
+}
+
+#smonk-message-input {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 11px 13px;
+
+  border-radius: 10px;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.12);
+
+  background:
+    rgba(255, 255, 255, 0.07);
+
+  color: white;
+
+  outline: none;
+}
+
+#smonk-chat-form button {
+  width: 42px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background: #e3342f;
+
+  color: white;
+
+  cursor: pointer;
+}

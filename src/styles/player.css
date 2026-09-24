@@ -1,0 +1,227 @@
+/* ==============================
+   PLAYER
+============================== */
+
+.card {
+  position: relative;
+
+  width: min(650px, 90vw) !important;
+  padding: 20px 26px !important;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(18, 12, 14, 0.80),
+      rgba(20, 8, 11, 0.68)
+    ) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius: 18px !important;
+
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.40),
+    0 0 30px rgba(237, 20, 45, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+
+  color: var(--smonk-white) !important;
+}
+
+/* ==============================
+   TITLE
+============================== */
+
+.card-title {
+  margin-bottom: 16px !important;
+
+  color: var(--smonk-white) !important;
+
+  font-size: 18px !important;
+  font-weight: 800 !important;
+
+  letter-spacing: -0.3px;
+}
+
+/* ==============================
+   ALBUM
+============================== */
+
+.card img {
+  border-radius: 10px !important;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* ==============================
+   TEXT
+============================== */
+
+.card,
+.card p,
+.card span,
+.card div {
+  color: var(--smonk-white);
+}
+
+.card .text-muted,
+.card .text-secondary {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* ==============================
+   PROGRESS
+============================== */
+
+.progress {
+  height: 6px !important;
+
+  overflow: hidden;
+
+  border-radius: 20px !important;
+
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+
+.progress-bar {
+  border-radius: 20px !important;
+
+  background: var(--smonk-red) !important;
+
+  box-shadow:
+    0 0 12px rgba(237, 20, 45, 0.55);
+}
+
+/* ==============================
+   CONTROLS
+============================== */
+
+.card button,
+.card .btn {
+  transition:
+    transform 160ms ease,
+    filter 160ms ease;
+}
+
+.card button:hover,
+.card .btn:hover {
+  transform: scale(1.07);
+  filter: brightness(1.15);
+}
+
+/* ==============================
+   LINKS
+============================== */
+
+.card a {
+  color: rgba(255, 255, 255, 0.78) !important;
+
+  font-weight: 700 !important;
+
+  text-decoration: none !important;
+
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.card a:hover {
+  color: #ffffff !important;
+}
+
+/* ==============================
+   RED INNER GLOW
+============================== */
+
+.card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 70% 30%,
+      rgba(237, 20, 45, 0.10),
+      transparent 45%
+    );
+}
+
+/* ==============================
+   LIVE
+============================== */
+
+#smonk-live {
+  position: absolute;
+
+  top: 27px;
+  right: 27px;
+
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 5px 10px;
+
+  border: 1px solid rgba(237, 20, 45, 0.85);
+  border-radius: 999px;
+
+  background: rgba(15, 8, 10, 0.65);
+
+  color: white !important;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+
+  backdrop-filter: blur(10px);
+}
+
+#smonk-live::before {
+  content: "";
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--smonk-red);
+
+  box-shadow:
+    0 0 8px var(--smonk-red);
+
+  animation:
+    smonk-live-pulse
+    1.4s
+    ease-in-out
+    infinite;
+}
+
+@keyframes smonk-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.75);
+  }
+}
+
+.card hr {
+  border-color:
+    rgba(255, 255, 255, 0.12) !important;
+}
