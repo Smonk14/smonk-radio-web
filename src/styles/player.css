@@ -31,6 +31,7 @@
   color: var(--smonk-white) !important;
 }
 
+
 /* ==============================
    TITLE
 ============================== */
@@ -46,6 +47,7 @@
   letter-spacing: -0.3px;
 }
 
+
 /* ==============================
    ALBUM
 ============================== */
@@ -57,6 +59,7 @@
     0 8px 25px rgba(0, 0, 0, 0.45),
     0 0 0 1px rgba(255, 255, 255, 0.08);
 }
+
 
 /* ==============================
    TEXT
@@ -74,28 +77,42 @@
   color: rgba(255, 255, 255, 0.65) !important;
 }
 
+
 /* ==============================
    PROGRESS
 ============================== */
 
 .progress {
-  height: 6px !important;
+  height: 7px !important;
 
   overflow: hidden;
 
-  border-radius: 20px !important;
+  border-radius: 999px !important;
 
   background: rgba(255, 255, 255, 0.14) !important;
+
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 .progress-bar {
-  border-radius: 20px !important;
+  border-radius: 999px !important;
 
-  background: var(--smonk-red) !important;
+  background:
+    linear-gradient(
+      90deg,
+      #ffb800 0%,
+      #ffd84d 55%,
+      #fff09a 100%
+    ) !important;
 
   box-shadow:
-    0 0 12px rgba(237, 20, 45, 0.55);
+    0 0 8px rgba(255, 184, 0, 0.65),
+    0 0 16px rgba(255, 184, 0, 0.25);
+
+  transition: width 500ms linear;
 }
+
 
 /* ==============================
    CONTROLS
@@ -113,6 +130,7 @@
   transform: scale(1.07);
   filter: brightness(1.15);
 }
+
 
 /* ==============================
    LINKS
@@ -134,6 +152,7 @@
   color: #ffffff !important;
 }
 
+
 /* ==============================
    RED INNER GLOW
 ============================== */
@@ -154,6 +173,7 @@
     );
 }
 
+
 /* ==============================
    LIVE
 ============================== */
@@ -161,45 +181,54 @@
 #smonk-live {
   position: absolute;
 
-  top: 27px;
-  right: 27px;
+  top: 24px;
+  right: 26px;
 
   z-index: 20;
 
   display: flex;
   align-items: center;
+  justify-content: center;
 
-  gap: 6px;
+  gap: 8px;
 
-  padding: 5px 10px;
+  padding: 7px 14px;
 
-  border: 1px solid rgba(237, 20, 45, 0.85);
+  border: 1px solid rgba(237, 20, 45, 0.95);
   border-radius: 999px;
 
-  background: rgba(15, 8, 10, 0.65);
+  background: rgba(15, 8, 10, 0.78);
 
   color: white !important;
 
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 900;
 
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
 
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 0 18px rgba(237, 20, 45, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 #smonk-live::before {
   content: "";
 
-  width: 7px;
-  height: 7px;
+  width: 9px;
+  height: 9px;
+
+  flex-shrink: 0;
 
   border-radius: 50%;
 
   background: var(--smonk-red);
 
   box-shadow:
-    0 0 8px var(--smonk-red);
+    0 0 6px var(--smonk-red),
+    0 0 12px rgba(237, 20, 45, 0.8);
 
   animation:
     smonk-live-pulse
@@ -220,6 +249,11 @@
     transform: scale(0.75);
   }
 }
+
+
+/* ==============================
+   SEPARATORS
+============================== */
 
 .card hr {
   border-color:
