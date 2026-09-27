@@ -9,12 +9,12 @@ const socialLinks = [
   {
     name: "TikTok",
     url: "https://www.tiktok.com/@smonk14",
-    icon: `${ASSET_URL}/social/tik-tok.png`,
+    icon: `${ASSET_URL}/social/tiktok.png`,
   },
   {
     name: "Discord",
     url: "https://discord.gg/Kc86FT8XG",
-    icon: `${ASSET_URL}/social/discordia.png`,
+    icon: `${ASSET_URL}/social/discordi.png`,
   },
 ];
 
