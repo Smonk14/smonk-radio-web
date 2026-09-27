@@ -2,17 +2,17 @@ const socialLinks = [
   {
     name: "YouTube",
     url: "https://www.youtube.com/@Smonk14",
-    icon: "▶",
+    icon: "/social/youtube.png",
   },
   {
     name: "TikTok",
     url: "https://www.tiktok.com/@smonk14",
-    icon: "♪",
+    icon: "/social/tiktok.png",
   },
   {
     name: "Discord",
     url: "https://discord.gg/Kc86FT8XG",
-    icon: "🎮",
+    icon: "/social/discord.png",
   },
 ];
 
@@ -20,31 +20,30 @@ export function createSocialLinks() {
   if (document.querySelector("#smonk-socials")) return;
 
   const container = document.createElement("div");
-
   container.id = "smonk-socials";
 
   container.innerHTML = `
-    <span class="smonk-socials-title">
-      SÍGUEME
-    </span>
+    <span class="smonk-socials-title">SÍGUEME</span>
 
     <div class="smonk-socials-links">
       ${socialLinks
         .map(
-          (social) => `
+          ({ name, url, icon }) => `
             <a
-              href="${social.url}"
+              href="${url}"
               target="_blank"
               rel="noopener noreferrer"
               class="smonk-social-link"
-              aria-label="${social.name}"
+              aria-label="${name}"
             >
-              <span class="smonk-social-icon">
-                ${social.icon}
-              </span>
+              <img
+                src="${icon}"
+                alt=""
+                class="smonk-social-icon"
+              />
 
               <span class="smonk-social-name">
-                ${social.name}
+                ${name}
               </span>
             </a>
           `

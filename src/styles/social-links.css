@@ -66,20 +66,12 @@
 }
 
 .smonk-social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   width: 22px;
   height: 22px;
 
-  border-radius: 7px;
+  object-fit: contain;
 
-  background: rgba(237, 20, 45, 0.16);
-
-  color: var(--smonk-red);
-
-  font-size: 13px;
+  flex-shrink: 0;
 }
 
 .smonk-social-link:hover {
