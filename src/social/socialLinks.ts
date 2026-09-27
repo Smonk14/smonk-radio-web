@@ -14,7 +14,7 @@ const socialLinks = [
   {
     name: "Discord",
     url: "https://discord.gg/Kc86FT8XG",
-    icon: `${ASSET_URL}/social/discordi.png`,
+    icon: `${ASSET_URL}/social/discord.png`,
   },
 ];
 
