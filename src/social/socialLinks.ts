@@ -1,18 +1,20 @@
+const ASSET_URL = "https://smonk-radio-web.vercel.app";
+
 const socialLinks = [
   {
     name: "YouTube",
     url: "https://www.youtube.com/@Smonk14",
-    icon: "/social/youtube.png",
+    icon: `${ASSET_URL}/social/youtube.png`,
   },
   {
     name: "TikTok",
     url: "https://www.tiktok.com/@smonk14",
-    icon: "/social/tiktok.png",
+    icon: `${ASSET_URL}/social/tik-tok.png`,
   },
   {
     name: "Discord",
     url: "https://discord.gg/Kc86FT8XG",
-    icon: "/social/discord.png",
+    icon: `${ASSET_URL}/social/discordia.png`,
   },
 ];
 
