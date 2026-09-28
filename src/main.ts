@@ -4,8 +4,10 @@ import "./styles/chat.css";
 import "./styles/rocket-power.css";
 import "./styles/responsive.css";
 import "./styles/social-links.css";
-import { createSocialLinks } from "./social/socialLinks";
+import "./styles/live.css";
 
+import { createSocialLinks } from "./social/socialLinks";
+import { createLiveMode } from "./live/liveView";
 import { createChat } from "./chat/chat";
 import { createRocketPowerButton } from "./links/rocketPower";
 import { createLiveBadge } from "./player/liveBadge";
@@ -16,6 +18,7 @@ async function initSmonkRadio() {
   createLiveBadge();
   createRocketPowerButton();
   createSocialLinks();
+  createLiveMode();
   await createChat();
 }
 

@@ -1,0 +1,253 @@
+/* =========================
+   SMONK RADIO - LIVE MODE
+   ========================= */
+
+.smonk-live-show {
+  position: fixed;
+
+  /* Arriba a la izquierda */
+  top: 90px;
+  left: 40px;
+
+  width: 360px;
+  padding: 22px 24px;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(237, 20, 45, 0.22),
+      transparent 45%
+    ),
+    rgba(8, 9, 13, 0.92);
+
+  border: 1px solid rgba(237, 20, 45, 0.45);
+  border-radius: 20px;
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    0 0 35px rgba(237, 20, 45, 0.12);
+
+  color: white;
+
+  z-index: 60;
+
+  animation: smonk-live-enter 300ms ease-out;
+}
+
+/* =========================
+   ESTADO EN VIVO
+   ========================= */
+
+.smonk-live-show__status {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 9px;
+
+  margin-bottom: 18px;
+
+  color: #ff3349;
+
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.6px;
+
+  text-transform: uppercase;
+}
+
+.smonk-live-show__dot {
+  width: 9px;
+  height: 9px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #ed142d;
+
+  box-shadow:
+    0 0 8px rgba(237, 20, 45, 0.8),
+    0 0 16px rgba(237, 20, 45, 0.45);
+
+  animation: smonk-live-pulse 1.4s infinite;
+}
+
+/* =========================
+   CONTENIDO
+   ========================= */
+
+.smonk-live-show__content {
+  text-align: left;
+}
+
+/* Ocultamos el micrófono grande.
+   Ya tenemos uno junto al comentarista. */
+
+.smonk-live-show__icon {
+  display: none;
+}
+
+/* =========================
+   TÍTULO
+   ========================= */
+
+.smonk-live-show__title {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 25px;
+  font-weight: 900;
+  line-height: 1.15;
+
+  letter-spacing: -0.5px;
+}
+
+/* =========================
+   COMENTARISTA
+   ========================= */
+
+.smonk-live-show__commentators {
+  margin-top: 10px;
+
+  color: #f8f5ed;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.smonk-live-show__commentators::before {
+  content: "🎙️ ";
+}
+
+/* =========================
+   TIPO DE LIVE
+   ========================= */
+
+.smonk-live-show__type {
+  display: inline-block;
+
+  margin-top: 14px;
+  padding: 7px 13px;
+
+  background: rgba(237, 20, 45, 0.14);
+
+  border: 1px solid rgba(237, 20, 45, 0.25);
+  border-radius: 999px;
+
+  color: #ff6b7b;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+
+  text-transform: uppercase;
+}
+
+/* =========================
+   MENSAJE
+   ========================= */
+
+.smonk-live-show__message {
+  margin: 15px 0 0;
+
+  color: rgba(255, 255, 255, 0.72);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================
+   ANIMACIONES
+   ========================= */
+
+@keyframes smonk-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes smonk-live-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+   TABLET
+   ========================= */
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .smonk-live-show {
+    top: 90px;
+    left: 28px;
+
+    width: 340px;
+
+    padding: 20px 22px;
+  }
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 768px) {
+  .smonk-live-show {
+    position: absolute;
+
+    top: 80px;
+    left: 14px;
+    right: 14px;
+
+    width: auto;
+
+    padding: 18px;
+
+    border-radius: 16px;
+  }
+
+  .smonk-live-show__status {
+    margin-bottom: 13px;
+
+    font-size: 10px;
+  }
+
+  .smonk-live-show__title {
+    font-size: 21px;
+  }
+
+  .smonk-live-show__commentators {
+    font-size: 15px;
+  }
+
+  .smonk-live-show__type {
+    margin-top: 12px;
+
+    font-size: 10px;
+  }
+
+  .smonk-live-show__message {
+    margin-top: 12px;
+
+    font-size: 12px;
+  }
+}
