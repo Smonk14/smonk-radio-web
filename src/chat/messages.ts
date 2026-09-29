@@ -10,26 +10,40 @@ import {
 import { database } from "../config/firebase";
 
 import type {
-  ChatBadge,
   ChatColor,
+  ChatIcon,
 } from "./profile";
 
+
+/* =========================================
+   MESSAGE TYPE
+========================================= */
 
 export interface ChatMessage {
   uid: string;
   nickname: string;
   message: string;
+
   color?: ChatColor;
-  badge?: ChatBadge;
+  icon?: ChatIcon;
+
   timestamp?: number;
 }
 
+
+/* =========================================
+   FIREBASE REFERENCE
+========================================= */
 
 const messagesRef = ref(
   database,
   "messages"
 );
 
+
+/* =========================================
+   ESCUCHAR MENSAJES
+========================================= */
 
 export function listenToMessages(
   callback: (message: ChatMessage) => void
@@ -55,21 +69,24 @@ export function listenToMessages(
 }
 
 
+/* =========================================
+   ENVIAR MENSAJE
+========================================= */
+
 interface SendMessageParams {
   uid: string;
   nickname: string;
   message: string;
   color: ChatColor;
-  badge: ChatBadge;
+  icon: ChatIcon;
 }
-
 
 export async function sendMessage({
   uid,
   nickname,
   message,
   color,
-  badge,
+  icon,
 }: SendMessageParams) {
   const cleanMessage = message
     .trim()
@@ -79,12 +96,15 @@ export async function sendMessage({
     return;
   }
 
-  await push(messagesRef, {
-    uid,
-    nickname,
-    message: cleanMessage,
-    color,
-    badge,
-    timestamp: serverTimestamp(),
-  });
+  await push(
+    messagesRef,
+    {
+      uid,
+      nickname,
+      message: cleanMessage,
+      color,
+      icon,
+      timestamp: serverTimestamp(),
+    }
+  );
 }

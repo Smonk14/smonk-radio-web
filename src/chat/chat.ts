@@ -19,16 +19,15 @@ import {
 } from "./messages";
 
 import {
-  CHAT_BADGES,
   CHAT_COLORS,
+  CHAT_ICONS,
   DEFAULT_CHAT_PROFILE,
-  getChatBadge,
   getChatColor,
+  getChatIcon,
   getChatProfile,
   saveChatProfile,
   type ChatProfile,
 } from "./profile";
-
 
 export async function createChat() {
   try {
@@ -186,13 +185,30 @@ export async function createChat() {
         <div class="smonk-profile-section">
 
           <span class="smonk-profile-label">
-            TU BADGE
+            TU ICONO
           </span>
 
-          <div
-            id="smonk-badge-picker"
-            class="smonk-badge-picker"
-          ></div>
+          <div class="smonk-icon-category">
+            <span class="smonk-icon-category-title">
+              BALONES
+            </span>
+
+            <div
+              id="smonk-ball-picker"
+              class="smonk-icon-picker"
+            ></div>
+          </div>
+
+          <div class="smonk-icon-category">
+            <span class="smonk-icon-category-title">
+              CARROS
+            </span>
+
+            <div
+              id="smonk-car-picker"
+              class="smonk-icon-picker"
+            ></div>
+          </div>
 
         </div>
 
@@ -268,9 +284,14 @@ export async function createChat() {
       )!;
 
 
-    const badgePicker =
+    const ballPicker =
       chat.querySelector<HTMLElement>(
-        "#smonk-badge-picker"
+        "#smonk-ball-picker"
+      )!;
+
+    const carPicker =
+      chat.querySelector<HTMLElement>(
+        "#smonk-car-picker"
       )!;
 
 
@@ -379,111 +400,125 @@ export async function createChat() {
        PERFIL
     ========================================= */
 
-    function renderProfileSelectors() {
-      colorPicker.innerHTML = "";
+function renderProfileSelectors() {
+  colorPicker.innerHTML = "";
+  ballPicker.innerHTML = "";
+  carPicker.innerHTML = "";
 
-      badgePicker.innerHTML = "";
+  /* =========================================
+     COLORES
+  ========================================= */
 
+  CHAT_COLORS.forEach((color) => {
+    const button =
+      document.createElement("button");
 
-      CHAT_COLORS.forEach((color) => {
-        const button =
-          document.createElement("button");
+    button.type = "button";
 
-        button.type = "button";
+    button.className =
+      "smonk-color-option";
 
-        button.className =
-          "smonk-color-option";
-
-
-        if (profile.color === color.id) {
-          button.classList.add(
-            "selected"
-          );
-        }
-
-
-        button.style.backgroundColor =
-          color.value;
-
-        button.title = color.id;
-
-        button.setAttribute(
-          "aria-label",
-          `Color ${color.id}`
-        );
-
-
-        button.addEventListener(
-          "click",
-          () => {
-            profile.color =
-              color.id;
-
-            renderProfileSelectors();
-          }
-        );
-
-
-        colorPicker.appendChild(
-          button
-        );
-      });
-
-
-      CHAT_BADGES.forEach((badge) => {
-        const button =
-          document.createElement("button");
-
-        button.type = "button";
-
-        button.className =
-          "smonk-badge-option";
-
-
-        if (
-          profile.badge === badge.id
-        ) {
-          button.classList.add(
-            "selected"
-          );
-        }
-
-
-        const emoji =
-          document.createElement("span");
-
-        emoji.textContent =
-          badge.emoji;
-
-
-        const label =
-          document.createElement("small");
-
-        label.textContent =
-          badge.label;
-
-
-        button.appendChild(emoji);
-
-        button.appendChild(label);
-
-
-        button.addEventListener(
-          "click",
-          () => {
-            profile.badge =
-              badge.id;
-
-            renderProfileSelectors();
-          }
-        );
-
-
-        badgePicker.appendChild(
-          button
-        );
-      });
+    if (profile.color === color.id) {
+      button.classList.add(
+        "selected"
+      );
     }
+
+    button.style.backgroundColor =
+      color.value;
+
+    button.title = color.id;
+
+    button.setAttribute(
+      "aria-label",
+      `Color ${color.id}`
+    );
+
+    button.addEventListener(
+      "click",
+      () => {
+        profile.color =
+          color.id;
+
+        renderProfileSelectors();
+      }
+    );
+
+    colorPicker.appendChild(
+      button
+    );
+  });
+
+
+  /* =========================================
+     ICONOS
+  ========================================= */
+
+  CHAT_ICONS.forEach((icon) => {
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.className =
+      "smonk-icon-option";
+
+    if (profile.icon === icon.id) {
+      button.classList.add(
+        "selected"
+      );
+    }
+
+    button.title = icon.label;
+
+    button.setAttribute(
+      "aria-label",
+      `Icono ${icon.label}`
+    );
+
+
+    /* IMAGEN */
+
+    const image =
+      document.createElement("img");
+
+    image.src = icon.src;
+
+    image.alt = icon.label;
+
+    image.loading = "lazy";
+
+    image.draggable = false;
+
+    button.appendChild(image);
+
+
+    /* SELECCIONAR */
+
+    button.addEventListener(
+      "click",
+      () => {
+        profile.icon =
+          icon.id;
+
+        renderProfileSelectors();
+      }
+    );
+
+
+    /* CATEGORÍA */
+
+    if (icon.category === "ball") {
+      ballPicker.appendChild(
+        button
+      );
+    } else {
+      carPicker.appendChild(
+        button
+      );
+    }
+  });
+}
 
 
     /* =========================================
@@ -565,59 +600,66 @@ export async function createChat() {
           : "smonk-message";
 
 
-      /* =========================================
-         NOMBRE + BADGE + COLOR
-      ========================================= */
+    /* =========================================
+      NOMBRE + ICONO + COLOR
+    ========================================= */
 
-      const name =
-        document.createElement("div");
+    const name =
+      document.createElement("div");
 
-      name.className =
-        "smonk-message-name";
-
-
-      const badge =
-        getChatBadge(
-          data.badge ?? "gamer"
-        );
+    name.className =
+      "smonk-message-name";
 
 
-      const badgeElement =
-        document.createElement("span");
-
-      badgeElement.className =
-        "smonk-message-badge";
-
-      badgeElement.textContent =
-        badge.emoji;
-
-      badgeElement.title =
-        badge.label;
-
-
-      const nicknameElement =
-        document.createElement("span");
-
-      nicknameElement.className =
-        "smonk-message-nickname";
-
-      nicknameElement.textContent =
-        data.nickname;
-
-      nicknameElement.style.color =
-        getChatColor(
-          data.color ?? "red"
-        );
-
-
-      name.appendChild(
-        badgeElement
+    const icon =
+      getChatIcon(
+        data.icon ?? "ball_blue"
       );
 
-      name.appendChild(
-        nicknameElement
+    const iconElement =
+      document.createElement("img");
+
+    iconElement.className =
+      "smonk-message-icon";
+
+    iconElement.src =
+      icon.src;
+
+    iconElement.alt =
+      icon.label;
+
+    iconElement.title =
+      icon.label;
+
+    iconElement.loading =
+      "lazy";
+
+    iconElement.draggable =
+      false;
+
+
+    const nicknameElement =
+      document.createElement("span");
+
+    nicknameElement.className =
+      "smonk-message-nickname";
+
+    nicknameElement.textContent =
+      data.nickname;
+
+    nicknameElement.style.color =
+      getChatColor(
+        data.color ?? "red"
       );
 
+
+    name.appendChild(
+      iconElement
+    );
+
+    name.appendChild(
+      nicknameElement
+    );
 
       /* =========================================
          TEXTO
@@ -856,13 +898,17 @@ export async function createChat() {
 
 
         try {
-          const guestUser =
-            await loginAsGuest();
+          let guestUser = user;
 
+          if (
+            !guestUser ||
+            !guestUser.isAnonymous
+          ) {
+            guestUser =
+              await loginAsGuest();
+          }
 
-          await loadUser(
-            guestUser
-          );
+          await loadUser(guestUser);
 
         } catch (error) {
           console.error(
@@ -1084,8 +1130,9 @@ export async function createChat() {
               cleanMessage,
             color:
               profile.color,
-            badge:
-              profile.badge,
+
+            icon:
+              profile.icon,
           });
 
         } catch (error) {
@@ -1109,12 +1156,18 @@ export async function createChat() {
     const existingUser =
       await waitForAuth();
 
-
-    if (existingUser) {
-      await loadUser(
-        existingUser
-      );
+    if (
+      existingUser &&
+      !existingUser.isAnonymous
+    ) {
+      // Google / cuenta permanente:
+      // entra automáticamente.
+      await loadUser(existingUser);
     } else {
+      // Invitado o usuario sin sesión:
+      // mostramos siempre la pantalla inicial.
+      user = existingUser;
+
       openAuth();
     }
 

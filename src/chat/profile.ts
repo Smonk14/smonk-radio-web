@@ -6,87 +6,137 @@ import {
 
 import { database } from "../config/firebase";
 
+/* =========================================
+   COLORES
+========================================= */
 
 export const CHAT_COLORS = [
+  { id: "red", value: "#ff3b3b" },
+  { id: "orange", value: "#ff8a34" },
+  { id: "yellow", value: "#ffd43b" },
+  { id: "green", value: "#4ade80" },
+  { id: "blue", value: "#60a5fa" },
+  { id: "purple", value: "#c084fc" },
+] as const;
+
+
+/* =========================================
+   ICONOS
+========================================= */
+
+export const CHAT_ICONS = [
+  /* BALONES */
+
   {
-    id: "red",
-    value: "#ff3b3b",
+    id: "ball_blue",
+    src: "/chat/balones/azul.png",
+    category: "ball",
+    label: "Azul",
   },
+
   {
-    id: "orange",
-    value: "#ff8a34",
+    id: "ball_diamond",
+    src: "/chat/balones/diamante.png",
+    category: "ball",
+    label: "Diamante",
   },
+
   {
-    id: "yellow",
-    value: "#ffd43b",
+    id: "ball_gold",
+    src: "/chat/balones/dorado.png",
+    category: "ball",
+    label: "Dorado",
   },
+
   {
-    id: "green",
-    value: "#4ade80",
+    id: "ball_purple",
+    src: "/chat/balones/morado.png",
+    category: "ball",
+    label: "Morado",
   },
+
   {
-    id: "blue",
-    value: "#60a5fa",
+    id: "ball_red",
+    src: "/chat/balones/Rojo.png",
+    category: "ball",
+    label: "Rojo",
   },
+
   {
-    id: "purple",
-    value: "#c084fc",
+    id: "ball_green",
+    src: "/chat/balones/verde.png",
+    category: "ball",
+    label: "Verde",
+  },
+
+  /* CARROS */
+
+  {
+    id: "car_yellow",
+    src: "/chat/carros/amarillo.png",
+    category: "car",
+    label: "Amarillo",
+  },
+
+  {
+    id: "car_orange",
+    src: "/chat/carros/naranja.png",
+    category: "car",
+    label: "Naranja",
+  },
+
+  {
+    id: "car_red",
+    src: "/chat/carros/rojo.png",
+    category: "car",
+    label: "Rojo",
+  },
+
+  {
+    id: "car_green",
+    src: "/chat/carros/verde.png",
+    category: "car",
+    label: "Verde",
+  },
+
+  {
+    id: "car_green_blue",
+    src: "/chat/carros/verdeAzul.png",
+    category: "car",
+    label: "Verde Azul",
   },
 ] as const;
 
 
-export const CHAT_BADGES = [
-  {
-    id: "gamer",
-    emoji: "🎮",
-    label: "Gamer",
-  },
-  {
-    id: "racer",
-    emoji: "🏎️",
-    label: "Racer",
-  },
-  {
-    id: "dj",
-    emoji: "🎧",
-    label: "DJ",
-  },
-  {
-    id: "rocket",
-    emoji: "🚀",
-    label: "Rocket",
-  },
-  {
-    id: "monkey",
-    emoji: "🐵",
-    label: "Smonk",
-  },
-  {
-    id: "fire",
-    emoji: "🔥",
-    label: "Fire",
-  },
-] as const;
-
+/* =========================================
+   TYPES
+========================================= */
 
 export type ChatColor =
   typeof CHAT_COLORS[number]["id"];
 
-export type ChatBadge =
-  typeof CHAT_BADGES[number]["id"];
-
+export type ChatIcon =
+  typeof CHAT_ICONS[number]["id"];
 
 export interface ChatProfile {
   color: ChatColor;
-  badge: ChatBadge;
+  icon: ChatIcon;
 }
 
 
+/* =========================================
+   PERFIL DEFAULT
+========================================= */
+
 export const DEFAULT_CHAT_PROFILE: ChatProfile = {
   color: "red",
-  badge: "gamer",
+  icon: "ball_blue",
 };
 
+
+/* =========================================
+   OBTENER PERFIL
+========================================= */
 
 export async function getChatProfile(
   uid: string
@@ -101,23 +151,33 @@ export async function getChatProfile(
 
   const data = snapshot.val();
 
-  return {
-    color:
-      CHAT_COLORS.some(
-        (color) => color.id === data.color
-      )
-        ? data.color
-        : DEFAULT_CHAT_PROFILE.color,
+  const validColor =
+    CHAT_COLORS.some(
+      (color) =>
+        color.id === data.color
+    );
 
-    badge:
-      CHAT_BADGES.some(
-        (badge) => badge.id === data.badge
-      )
-        ? data.badge
-        : DEFAULT_CHAT_PROFILE.badge,
+  const validIcon =
+    CHAT_ICONS.some(
+      (icon) =>
+        icon.id === data.icon
+    );
+
+  return {
+    color: validColor
+      ? data.color
+      : DEFAULT_CHAT_PROFILE.color,
+
+    icon: validIcon
+      ? data.icon
+      : DEFAULT_CHAT_PROFILE.icon,
   };
 }
 
+
+/* =========================================
+   GUARDAR PERFIL
+========================================= */
 
 export async function saveChatProfile(
   uid: string,
@@ -125,49 +185,59 @@ export async function saveChatProfile(
 ) {
   const validColor =
     CHAT_COLORS.some(
-      (color) => color.id === profile.color
+      (color) =>
+        color.id === profile.color
     );
 
-  const validBadge =
-    CHAT_BADGES.some(
-      (badge) => badge.id === profile.badge
+  const validIcon =
+    CHAT_ICONS.some(
+      (icon) =>
+        icon.id === profile.icon
     );
 
-
-  if (!validColor || !validBadge) {
+  if (!validColor || !validIcon) {
     throw new Error(
       "Perfil de chat inválido."
     );
   }
 
-
   await update(
     ref(database, `users/${uid}`),
     {
       color: profile.color,
-      badge: profile.badge,
+      icon: profile.icon,
     }
   );
 }
 
+
+/* =========================================
+   OBTENER COLOR
+========================================= */
 
 export function getChatColor(
   colorId: string
 ) {
   return (
     CHAT_COLORS.find(
-      (color) => color.id === colorId
+      (color) =>
+        color.id === colorId
     )?.value ?? "#ff3b3b"
   );
 }
 
 
-export function getChatBadge(
-  badgeId: string
+/* =========================================
+   OBTENER ICONO
+========================================= */
+
+export function getChatIcon(
+  iconId: string
 ) {
   return (
-    CHAT_BADGES.find(
-      (badge) => badge.id === badgeId
-    ) ?? CHAT_BADGES[0]
+    CHAT_ICONS.find(
+      (icon) =>
+        icon.id === iconId
+    ) ?? CHAT_ICONS[0]
   );
 }
