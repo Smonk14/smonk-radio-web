@@ -24,84 +24,74 @@ export const CHAT_COLORS = [
    ICONOS
 ========================================= */
 
-export const CHAT_ICONS = [
-  /* BALONES */
+const ASSET_URL =
+  "https://smonk-radio-web.vercel.app";
 
+export const CHAT_ICONS = [
   {
     id: "ball_blue",
-    src: "/chat/balones/azul.png",
+    src: `${ASSET_URL}/chat/balones/azul.png`,
     category: "ball",
     label: "Azul",
   },
-
   {
     id: "ball_diamond",
-    src: "/chat/balones/diamante.png",
+    src: `${ASSET_URL}/chat/balones/diamante.png`,
     category: "ball",
     label: "Diamante",
   },
-
   {
     id: "ball_gold",
-    src: "/chat/balones/dorado.png",
+    src: `${ASSET_URL}/chat/balones/dorado.png`,
     category: "ball",
     label: "Dorado",
   },
-
   {
     id: "ball_purple",
-    src: "/chat/balones/morado.png",
+    src: `${ASSET_URL}/chat/balones/morado.png`,
     category: "ball",
     label: "Morado",
   },
-
   {
     id: "ball_red",
-    src: "/chat/balones/Rojo.png",
+    src: `${ASSET_URL}/chat/balones/Rojo.png`,
     category: "ball",
     label: "Rojo",
   },
-
   {
     id: "ball_green",
-    src: "/chat/balones/verde.png",
+    src: `${ASSET_URL}/chat/balones/verde.png`,
     category: "ball",
     label: "Verde",
   },
-
-  /* CARROS */
 
   {
     id: "car_yellow",
-    src: "/chat/carros/amarillo.png",
+    src: `${ASSET_URL}/chat/carros/amarillo.png`,
     category: "car",
     label: "Amarillo",
   },
-
   {
     id: "car_orange",
-    src: "/chat/carros/naranja.png",
+    src: `${ASSET_URL}/chat/carros/naranja.png`,
     category: "car",
     label: "Naranja",
   },
-
   {
     id: "car_red",
-    src: "/chat/carros/rojo.png",
+    src: `${ASSET_URL}/chat/carros/rojo.png`,
     category: "car",
     label: "Rojo",
   },
-
   {
     id: "car_green",
-    src: "/chat/carros/verde.png",
+    src: `${ASSET_URL}/chat/carros/verde.png`,
     category: "car",
     label: "Verde",
   },
-
   {
     id: "car_green_blue",
-    src: "/chat/carros/verdeAzul.png",
+    src: `${ASSET_URL}/chat/carros/verdeAzul.png`,
     category: "car",
     label: "Verde Azul",
   },
