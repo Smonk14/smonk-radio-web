@@ -1,6 +1,10 @@
-import { signInAnonymously } from "firebase/auth";
+import type { User } from "firebase/auth";
 
-import { auth } from "../config/firebase";
+import {
+  loginAsGuest,
+  loginWithGoogle,
+  waitForAuth,
+} from "./chatAuth";
 
 import {
   getUserNickname,
@@ -14,25 +18,32 @@ import {
   type ChatMessage,
 } from "./messages";
 
+import {
+  CHAT_BADGES,
+  CHAT_COLORS,
+  DEFAULT_CHAT_PROFILE,
+  getChatBadge,
+  getChatColor,
+  getChatProfile,
+  saveChatProfile,
+  type ChatProfile,
+} from "./profile";
+
+
 export async function createChat() {
   try {
-    /* Evitar chat duplicado */
+    /* =========================================
+       EVITAR CHAT DUPLICADO
+    ========================================= */
+
     if (document.querySelector("#smonk-chat")) {
       return;
     }
 
-    /* =========================
-       AUTENTICACIÓN
-    ========================= */
 
-    const credential =
-      await signInAnonymously(auth);
-
-    const user = credential.user;
-
-    /* =========================
+    /* =========================================
        CREAR CHAT
-    ========================= */
+    ========================================= */
 
     const chat = document.createElement("div");
 
@@ -51,6 +62,7 @@ export async function createChat() {
           type="button"
           title="Cambiar sobrenombre"
           aria-label="Cambiar sobrenombre"
+          style="display: none;"
         >
           <svg
             width="18"
@@ -78,15 +90,75 @@ export async function createChat() {
 
       </div>
 
-      <div id="smonk-chat-login">
+
+      <!-- ==============================
+           SELECCIÓN DE AUTENTICACIÓN
+      =============================== -->
+
+      <div id="smonk-chat-auth">
 
         <div class="smonk-chat-welcome">
-          <strong>¡PE PE PEROOO!</strong>
+
+          <strong>¡PE PE PEROOO! 🔥</strong>
 
           <span>
-            Elige un sobrenombre para entrar al chat.
+            Únete al chat de Smonk Radio
           </span>
+
         </div>
+
+
+        <button
+          id="smonk-google-login"
+          class="smonk-auth-button smonk-auth-google"
+          type="button"
+        >
+          <span class="smonk-google-icon">G</span>
+          CONTINUAR CON GOOGLE
+        </button>
+
+
+        <div class="smonk-auth-divider">
+          <span>o</span>
+        </div>
+
+
+        <button
+          id="smonk-guest-login"
+          class="smonk-auth-button smonk-auth-guest"
+          type="button"
+        >
+          👤 ENTRAR COMO INVITADO
+        </button>
+
+
+        <div
+          id="smonk-auth-error"
+          class="smonk-auth-error"
+        ></div>
+
+      </div>
+
+
+      <!-- ==============================
+           NICKNAME / PERFIL
+      =============================== -->
+
+      <div
+        id="smonk-chat-login"
+        hidden
+      >
+
+        <div class="smonk-chat-welcome">
+
+          <strong>PONTE UN NOMBRE!</strong>
+
+          <span>
+            Elige tu sobrenombre para entrar al chat.
+          </span>
+
+        </div>
+
 
         <input
           id="smonk-nickname"
@@ -96,12 +168,42 @@ export async function createChat() {
           placeholder="Tu sobrenombre"
         />
 
+
+        <div class="smonk-profile-section">
+
+          <span class="smonk-profile-label">
+            COLOR DEL NOMBRE
+          </span>
+
+          <div
+            id="smonk-color-picker"
+            class="smonk-color-picker"
+          ></div>
+
+        </div>
+
+
+        <div class="smonk-profile-section">
+
+          <span class="smonk-profile-label">
+            TU BADGE
+          </span>
+
+          <div
+            id="smonk-badge-picker"
+            class="smonk-badge-picker"
+          ></div>
+
+        </div>
+
+
         <button
           id="smonk-enter-chat"
           type="button"
         >
           ENTRAR AL CHAT
         </button>
+
 
         <button
           id="smonk-back-chat"
@@ -111,9 +213,15 @@ export async function createChat() {
           ← VOLVER AL CHAT
         </button>
 
+
         <div id="smonk-login-error"></div>
 
       </div>
+
+
+      <!-- ==============================
+           CHAT
+      =============================== -->
 
       <div
         id="smonk-chat-room"
@@ -121,6 +229,7 @@ export async function createChat() {
       >
 
         <div id="smonk-messages"></div>
+
 
         <form id="smonk-chat-form">
 
@@ -131,6 +240,7 @@ export async function createChat() {
             autocomplete="off"
             placeholder="Escribe un mensaje..."
           />
+
 
           <button
             type="submit"
@@ -144,250 +254,303 @@ export async function createChat() {
       </div>
     `;
 
+
     document.body.appendChild(chat);
 
-    /* =========================
-       ELEMENTOS
-    ========================= */
 
-    const login =
+    /* =========================================
+       ELEMENTOS
+    ========================================= */
+
+    const colorPicker =
+      chat.querySelector<HTMLElement>(
+        "#smonk-color-picker"
+      )!;
+
+
+    const badgePicker =
+      chat.querySelector<HTMLElement>(
+        "#smonk-badge-picker"
+      )!;
+
+
+    const authScreen =
+      chat.querySelector<HTMLElement>(
+        "#smonk-chat-auth"
+      )!;
+
+
+    const nicknameScreen =
       chat.querySelector<HTMLElement>(
         "#smonk-chat-login"
       )!;
+
 
     const room =
       chat.querySelector<HTMLElement>(
         "#smonk-chat-room"
       )!;
 
+
+    const googleButton =
+      chat.querySelector<HTMLButtonElement>(
+        "#smonk-google-login"
+      )!;
+
+
+    const guestButton =
+      chat.querySelector<HTMLButtonElement>(
+        "#smonk-guest-login"
+      )!;
+
+
+    const authError =
+      chat.querySelector<HTMLElement>(
+        "#smonk-auth-error"
+      )!;
+
+
     const nicknameInput =
       chat.querySelector<HTMLInputElement>(
         "#smonk-nickname"
       )!;
+
 
     const enterButton =
       chat.querySelector<HTMLButtonElement>(
         "#smonk-enter-chat"
       )!;
 
+
     const backChatButton =
       chat.querySelector<HTMLButtonElement>(
         "#smonk-back-chat"
       )!;
+
 
     const changeNameButton =
       chat.querySelector<HTMLButtonElement>(
         "#smonk-change-name"
       )!;
 
+
     const loginError =
       chat.querySelector<HTMLElement>(
         "#smonk-login-error"
       )!;
+
 
     const messagesContainer =
       chat.querySelector<HTMLElement>(
         "#smonk-messages"
       )!;
 
+
     const form =
       chat.querySelector<HTMLFormElement>(
         "#smonk-chat-form"
       )!;
+
 
     const messageInput =
       chat.querySelector<HTMLInputElement>(
         "#smonk-message-input"
       )!;
 
-    /* =========================
+
+    /* =========================================
        ESTADO
-    ========================= */
+    ========================================= */
+
+    let user: User | null = null;
 
     let nickname = "";
+
     let nicknameKey = "";
 
-    /* =========================
-       ABRIR CHAT
-    ========================= */
+    let profile: ChatProfile = {
+      ...DEFAULT_CHAT_PROFILE,
+    };
 
-    function openChat() {
-      login.hidden = true;
-      room.hidden = false;
+    let messagesStarted = false;
 
-      // Ahora usamos flex porque contiene el SVG.
-      changeNameButton.style.display = "flex";
 
-      messageInput.focus();
+    /* =========================================
+       PERFIL
+    ========================================= */
+
+    function renderProfileSelectors() {
+      colorPicker.innerHTML = "";
+
+      badgePicker.innerHTML = "";
+
+
+      CHAT_COLORS.forEach((color) => {
+        const button =
+          document.createElement("button");
+
+        button.type = "button";
+
+        button.className =
+          "smonk-color-option";
+
+
+        if (profile.color === color.id) {
+          button.classList.add(
+            "selected"
+          );
+        }
+
+
+        button.style.backgroundColor =
+          color.value;
+
+        button.title = color.id;
+
+        button.setAttribute(
+          "aria-label",
+          `Color ${color.id}`
+        );
+
+
+        button.addEventListener(
+          "click",
+          () => {
+            profile.color =
+              color.id;
+
+            renderProfileSelectors();
+          }
+        );
+
+
+        colorPicker.appendChild(
+          button
+        );
+      });
+
+
+      CHAT_BADGES.forEach((badge) => {
+        const button =
+          document.createElement("button");
+
+        button.type = "button";
+
+        button.className =
+          "smonk-badge-option";
+
+
+        if (
+          profile.badge === badge.id
+        ) {
+          button.classList.add(
+            "selected"
+          );
+        }
+
+
+        const emoji =
+          document.createElement("span");
+
+        emoji.textContent =
+          badge.emoji;
+
+
+        const label =
+          document.createElement("small");
+
+        label.textContent =
+          badge.label;
+
+
+        button.appendChild(emoji);
+
+        button.appendChild(label);
+
+
+        button.addEventListener(
+          "click",
+          () => {
+            profile.badge =
+              badge.id;
+
+            renderProfileSelectors();
+          }
+        );
+
+
+        badgePicker.appendChild(
+          button
+        );
+      });
     }
 
-    /* =========================
-       ABRIR NICKNAME
-    ========================= */
+
+    /* =========================================
+       PANTALLAS
+    ========================================= */
+
+    function hideAllScreens() {
+      authScreen.hidden = true;
+
+      nicknameScreen.hidden = true;
+
+      room.hidden = true;
+    }
+
+
+    function openAuth() {
+      hideAllScreens();
+
+      authScreen.hidden = false;
+
+      changeNameButton.style.display =
+        "none";
+    }
+
+
+    function openChat() {
+      hideAllScreens();
+
+      room.hidden = false;
+
+      changeNameButton.style.display =
+        "flex";
+
+      messageInput.focus();
+
+      startMessages();
+    }
+
 
     function openNickname() {
-      login.hidden = false;
-      room.hidden = true;
+      hideAllScreens();
 
-      changeNameButton.style.display = "none";
+      renderProfileSelectors();
 
-      nicknameInput.value = nickname;
+      nicknameScreen.hidden = false;
 
-      // Solo se puede volver si ya existe
-      // un nickname registrado.
-      backChatButton.hidden = !nickname;
+      changeNameButton.style.display =
+        "none";
+
+      nicknameInput.value =
+        nickname;
+
+      backChatButton.hidden =
+        !nickname;
+
+      enterButton.textContent =
+        nickname
+          ? "GUARDAR CAMBIOS"
+          : "ENTRAR AL CHAT";
 
       nicknameInput.focus();
     }
 
-    /* =========================
-       CARGAR NICKNAME
-    ========================= */
 
-    async function loadCurrentNickname() {
-      try {
-        const currentNickname =
-          await getUserNickname(user.uid);
-
-        if (currentNickname) {
-          nickname = currentNickname;
-
-          nicknameKey =
-            normalizeNickname(currentNickname);
-
-          localStorage.setItem(
-            "smonkNickname",
-            nickname
-          );
-
-          openChat();
-
-          return;
-        }
-
-        localStorage.removeItem(
-          "smonkNickname"
-        );
-
-        openNickname();
-      } catch (error) {
-        console.error(
-          "❌ Error consultando nickname:",
-          error
-        );
-
-        openNickname();
-      }
-    }
-
-    /* =========================
-       REGISTRAR NICKNAME
-    ========================= */
-
-    enterButton.addEventListener(
-      "click",
-      async () => {
-        const value =
-          nicknameInput.value.trim();
-
-        loginError.textContent = "";
-
-        if (value.length < 2) {
-          loginError.textContent =
-            "El sobrenombre debe tener mínimo 2 caracteres.";
-
-          return;
-        }
-
-        enterButton.disabled = true;
-        enterButton.textContent =
-          "ENTRANDO...";
-
-        try {
-          const result =
-            await reserveNickname({
-              uid: user.uid,
-              value,
-              currentNicknameKey:
-                nicknameKey,
-            });
-
-          nickname = result.nickname;
-          nicknameKey =
-            result.nicknameKey;
-
-          localStorage.setItem(
-            "smonkNickname",
-            nickname
-          );
-
-          loginError.textContent = "";
-
-          openChat();
-        } catch (error) {
-          console.error(
-            "❌ Error registrando nickname:",
-            error
-          );
-
-          loginError.textContent =
-            error instanceof Error
-              ? error.message
-              : "No se pudo registrar el sobrenombre.";
-        } finally {
-          enterButton.disabled = false;
-
-          enterButton.textContent =
-            "ENTRAR AL CHAT";
-        }
-      }
-    );
-
-    /* =========================
-       ENTER EN NICKNAME
-    ========================= */
-
-    nicknameInput.addEventListener(
-      "keydown",
-      (event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          enterButton.click();
-        }
-      }
-    );
-
-    /* =========================
-       EDITAR NICKNAME
-    ========================= */
-
-    changeNameButton.addEventListener(
-      "click",
-      () => {
-        loginError.textContent = "";
-        openNickname();
-      }
-    );
-
-    /* =========================
-       CANCELAR EDICIÓN
-    ========================= */
-
-    backChatButton.addEventListener(
-      "click",
-      () => {
-        loginError.textContent = "";
-
-        nicknameInput.value =
-          nickname;
-
-        openChat();
-      }
-    );
-
-    /* =========================
-       MOSTRAR MENSAJE
-    ========================= */
+    /* =========================================
+       MENSAJES
+    ========================================= */
 
     function renderMessage(
       data: ChatMessage
@@ -395,10 +558,16 @@ export async function createChat() {
       const message =
         document.createElement("div");
 
+
       message.className =
-        data.uid === user.uid
+        data.uid === user?.uid
           ? "smonk-message smonk-message-me"
           : "smonk-message";
+
+
+      /* =========================================
+         NOMBRE + BADGE + COLOR
+      ========================================= */
 
       const name =
         document.createElement("div");
@@ -406,8 +575,53 @@ export async function createChat() {
       name.className =
         "smonk-message-name";
 
-      name.textContent =
+
+      const badge =
+        getChatBadge(
+          data.badge ?? "gamer"
+        );
+
+
+      const badgeElement =
+        document.createElement("span");
+
+      badgeElement.className =
+        "smonk-message-badge";
+
+      badgeElement.textContent =
+        badge.emoji;
+
+      badgeElement.title =
+        badge.label;
+
+
+      const nicknameElement =
+        document.createElement("span");
+
+      nicknameElement.className =
+        "smonk-message-nickname";
+
+      nicknameElement.textContent =
         data.nickname;
+
+      nicknameElement.style.color =
+        getChatColor(
+          data.color ?? "red"
+        );
+
+
+      name.appendChild(
+        badgeElement
+      );
+
+      name.appendChild(
+        nicknameElement
+      );
+
+
+      /* =========================================
+         TEXTO
+      ========================================= */
 
       const text =
         document.createElement("div");
@@ -415,10 +629,14 @@ export async function createChat() {
       text.className =
         "smonk-message-text";
 
-      // Importante: textContent evita
-      // insertar HTML/JS en el chat.
+      // textContent evita inyección HTML/JS.
       text.textContent =
         data.message;
+
+
+      /* =========================================
+         HORA
+      ========================================= */
 
       const time =
         document.createElement("div");
@@ -426,8 +644,10 @@ export async function createChat() {
       time.className =
         "smonk-message-time";
 
+
       if (
-        typeof data.timestamp === "number"
+        typeof data.timestamp ===
+        "number"
       ) {
         time.textContent =
           new Date(
@@ -441,69 +661,462 @@ export async function createChat() {
           );
       }
 
+
+      /* =========================================
+         ARMAR MENSAJE
+      ========================================= */
+
       message.appendChild(name);
+
       message.appendChild(text);
+
       message.appendChild(time);
+
 
       messagesContainer.appendChild(
         message
       );
 
+
       messagesContainer.scrollTop =
         messagesContainer.scrollHeight;
     }
 
-    /* =========================
-       ESCUCHAR FIREBASE
-    ========================= */
 
-    listenToMessages(renderMessage);
+    function startMessages() {
+      if (messagesStarted) {
+        return;
+      }
 
-    /* =========================
+
+      messagesStarted = true;
+
+      listenToMessages(
+        renderMessage
+      );
+    }
+
+
+    /* =========================================
+       USUARIO AUTENTICADO
+    ========================================= */
+
+    async function loadUser(
+      authenticatedUser: User
+    ) {
+      user = authenticatedUser;
+
+
+      profile =
+        await getChatProfile(
+          authenticatedUser.uid
+        );
+
+
+      authError.textContent = "";
+
+
+      try {
+        const currentNickname =
+          await getUserNickname(
+            authenticatedUser.uid
+          );
+
+
+        if (currentNickname) {
+          nickname =
+            currentNickname;
+
+
+          nicknameKey =
+            normalizeNickname(
+              currentNickname
+            );
+
+
+          localStorage.setItem(
+            "smonkNickname",
+            nickname
+          );
+
+
+          openChat();
+
+          return;
+        }
+
+
+        localStorage.removeItem(
+          "smonkNickname"
+        );
+
+
+        openNickname();
+
+      } catch (error) {
+        console.error(
+          "❌ Error consultando nickname:",
+          error
+        );
+
+
+        openNickname();
+      }
+    }
+
+
+    /* =========================================
+       GOOGLE
+    ========================================= */
+
+    googleButton.addEventListener(
+      "click",
+      async () => {
+        authError.textContent = "";
+
+
+        // Solo bloqueamos Google.
+        // Invitado sigue disponible.
+        googleButton.disabled = true;
+
+
+        googleButton.innerHTML = `
+          <span class="smonk-google-icon">
+            G
+          </span>
+          CONECTANDO...
+        `;
+
+
+        try {
+          const googleUser =
+            await loginWithGoogle();
+
+
+          await loadUser(
+            googleUser
+          );
+
+        } catch (error) {
+          const firebaseError =
+            error as {
+              code?: string;
+            };
+
+
+          console.error(
+            "❌ Error iniciando con Google:",
+            firebaseError
+          );
+
+
+          if (
+            firebaseError.code ===
+              "auth/popup-closed-by-user" ||
+            firebaseError.code ===
+              "auth/cancelled-popup-request"
+          ) {
+            authError.textContent =
+              "Inicio con Google cancelado.";
+          } else {
+            authError.textContent =
+              "No se pudo iniciar sesión con Google.";
+          }
+
+        } finally {
+          googleButton.disabled =
+            false;
+
+
+          googleButton.innerHTML = `
+            <span class="smonk-google-icon">
+              G
+            </span>
+            CONTINUAR CON GOOGLE
+          `;
+        }
+      }
+    );
+
+
+    /* =========================================
+       INVITADO
+    ========================================= */
+
+    guestButton.addEventListener(
+      "click",
+      async () => {
+        authError.textContent = "";
+
+        guestButton.disabled =
+          true;
+
+        guestButton.textContent =
+          "ENTRANDO...";
+
+
+        try {
+          const guestUser =
+            await loginAsGuest();
+
+
+          await loadUser(
+            guestUser
+          );
+
+        } catch (error) {
+          console.error(
+            "❌ Error entrando como invitado:",
+            error
+          );
+
+
+          authError.textContent =
+            "No se pudo entrar como invitado.";
+
+        } finally {
+          guestButton.disabled =
+            false;
+
+          guestButton.textContent =
+            "👤 ENTRAR COMO INVITADO";
+        }
+      }
+    );
+
+
+    /* =========================================
+       REGISTRAR / CAMBIAR NICKNAME
+    ========================================= */
+
+    enterButton.addEventListener(
+      "click",
+      async () => {
+        if (!user) {
+          openAuth();
+
+          return;
+        }
+
+
+        const value =
+          nicknameInput.value.trim();
+
+
+        loginError.textContent =
+          "";
+
+
+        if (value.length < 2) {
+          loginError.textContent =
+            "El sobrenombre debe tener mínimo 2 caracteres.";
+
+          return;
+        }
+
+
+        enterButton.disabled =
+          true;
+
+        enterButton.textContent =
+          "ENTRANDO...";
+
+
+        try {
+          const result =
+            await reserveNickname({
+              uid: user.uid,
+              value,
+              currentNicknameKey:
+                nicknameKey,
+            });
+
+
+          await saveChatProfile(
+            user.uid,
+            profile
+          );
+
+
+          nickname =
+            result.nickname;
+
+          nicknameKey =
+            result.nicknameKey;
+
+
+          localStorage.setItem(
+            "smonkNickname",
+            nickname
+          );
+
+
+          loginError.textContent =
+            "";
+
+
+          openChat();
+
+        } catch (error) {
+          console.error(
+            "❌ Error registrando nickname:",
+            error
+          );
+
+
+          loginError.textContent =
+            error instanceof Error
+              ? error.message
+              : "No se pudo registrar el sobrenombre.";
+
+        } finally {
+          enterButton.disabled =
+            false;
+
+          enterButton.textContent =
+            nickname
+              ? "GUARDAR CAMBIOS"
+              : "ENTRAR AL CHAT";
+                  }
+      }
+    );
+
+
+    /* =========================================
+       ENTER EN NICKNAME
+    ========================================= */
+
+    nicknameInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key === "Enter"
+        ) {
+          event.preventDefault();
+
+          enterButton.click();
+        }
+      }
+    );
+
+
+    /* =========================================
+       EDITAR PERFIL / NICKNAME
+    ========================================= */
+
+    changeNameButton.addEventListener(
+      "click",
+      () => {
+        loginError.textContent =
+          "";
+
+        openNickname();
+      }
+    );
+
+
+    /* =========================================
+       CANCELAR EDICIÓN
+    ========================================= */
+    backChatButton.addEventListener(
+      "click",
+      async () => {
+        loginError.textContent = "";
+
+        nicknameInput.value =
+          nickname;
+
+        if (user) {
+          profile =
+            await getChatProfile(
+              user.uid
+            );
+        }
+
+        openChat();
+      }
+    );
+
+
+    /* =========================================
        ENVIAR MENSAJE
-    ========================= */
+    ========================================= */
 
     form.addEventListener(
       "submit",
       async (event) => {
         event.preventDefault();
 
-        const text =
-          messageInput.value.trim();
 
-        if (!text || !nickname) {
+        if (!user) {
           return;
         }
 
-        const cleanMessage =
-          text.substring(0, 250);
 
-        messageInput.value = "";
+        const text =
+          messageInput.value.trim();
+
+
+        if (
+          !text ||
+          !nickname
+        ) {
+          return;
+        }
+
+
+        const cleanMessage =
+          text.substring(
+            0,
+            250
+          );
+
+
+        messageInput.value =
+          "";
+
 
         try {
-          await sendMessage(
-            user.uid,
+          await sendMessage({
+            uid: user.uid,
             nickname,
-            cleanMessage
-          );
+            message:
+              cleanMessage,
+            color:
+              profile.color,
+            badge:
+              profile.badge,
+          });
+
         } catch (error) {
           console.error(
             "❌ No se pudo enviar el mensaje:",
             error
           );
 
-          // Restauramos el mensaje si Firebase falla.
+
           messageInput.value =
             cleanMessage;
         }
       }
     );
 
-    /* =========================
-       INICIAR
-    ========================= */
 
-    await loadCurrentNickname();
+    /* =========================================
+       INICIAR CHAT
+    ========================================= */
+
+    const existingUser =
+      await waitForAuth();
+
+
+    if (existingUser) {
+      await loadUser(
+        existingUser
+      );
+    } else {
+      openAuth();
+    }
 
   } catch (error) {
     console.error(

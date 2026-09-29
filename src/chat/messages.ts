@@ -9,17 +9,27 @@ import {
 
 import { database } from "../config/firebase";
 
+import type {
+  ChatBadge,
+  ChatColor,
+} from "./profile";
+
+
 export interface ChatMessage {
   uid: string;
   nickname: string;
   message: string;
+  color?: ChatColor;
+  badge?: ChatBadge;
   timestamp?: number;
 }
+
 
 const messagesRef = ref(
   database,
   "messages"
 );
+
 
 export function listenToMessages(
   callback: (message: ChatMessage) => void
@@ -44,11 +54,23 @@ export function listenToMessages(
   );
 }
 
-export async function sendMessage(
-  uid: string,
-  nickname: string,
-  message: string
-) {
+
+interface SendMessageParams {
+  uid: string;
+  nickname: string;
+  message: string;
+  color: ChatColor;
+  badge: ChatBadge;
+}
+
+
+export async function sendMessage({
+  uid,
+  nickname,
+  message,
+  color,
+  badge,
+}: SendMessageParams) {
   const cleanMessage = message
     .trim()
     .substring(0, 250);
@@ -61,6 +83,8 @@ export async function sendMessage(
     uid,
     nickname,
     message: cleanMessage,
+    color,
+    badge,
     timestamp: serverTimestamp(),
   });
 }
