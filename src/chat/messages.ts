@@ -16,13 +16,21 @@ import type {
 
 
 /* =========================================
-   MESSAGE TYPE
+   MESSAGE TYPES
 ========================================= */
+
+export type ChatMessageType =
+  | "text"
+  | "emote"
+  | "gif";
+
 
 export interface ChatMessage {
   uid: string;
   nickname: string;
   message: string;
+
+  type?: ChatMessageType;
 
   color?: ChatColor;
   icon?: ChatIcon;
@@ -70,7 +78,7 @@ export function listenToMessages(
 
 
 /* =========================================
-   ENVIAR MENSAJE
+   ENVIAR MENSAJE NORMAL
 ========================================= */
 
 interface SendMessageParams {
@@ -102,8 +110,96 @@ export async function sendMessage({
       uid,
       nickname,
       message: cleanMessage,
+
+      type: "text",
+
       color,
       icon,
+
+      timestamp: serverTimestamp(),
+    }
+  );
+}
+
+
+/* =========================================
+   ENVIAR EMOTE
+========================================= */
+
+interface SendEmoteParams {
+  uid: string;
+  nickname: string;
+  emoteId: string;
+  color: ChatColor;
+  icon: ChatIcon;
+}
+
+export async function sendEmote({
+  uid,
+  nickname,
+  emoteId,
+  color,
+  icon,
+}: SendEmoteParams) {
+  if (!emoteId || !nickname) {
+    return;
+  }
+
+  await push(
+    messagesRef,
+    {
+      uid,
+      nickname,
+
+      message: emoteId,
+
+      type: "emote",
+
+      color,
+      icon,
+
+      timestamp: serverTimestamp(),
+    }
+  );
+}
+
+
+/* =========================================
+   ENVIAR GIF
+========================================= */
+
+interface SendGifParams {
+  uid: string;
+  nickname: string;
+  gifId: string;
+  color: ChatColor;
+  icon: ChatIcon;
+}
+
+export async function sendGif({
+  uid,
+  nickname,
+  gifId,
+  color,
+  icon,
+}: SendGifParams) {
+  if (!gifId || !nickname) {
+    return;
+  }
+
+  await push(
+    messagesRef,
+    {
+      uid,
+      nickname,
+
+      message: gifId,
+
+      type: "gif",
+
+      color,
+      icon,
+
       timestamp: serverTimestamp(),
     }
   );

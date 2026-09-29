@@ -14,6 +14,8 @@ import {
 
 import {
   listenToMessages,
+  sendEmote,
+  sendGif,
   sendMessage,
   type ChatMessage,
 } from "./messages";
@@ -28,6 +30,13 @@ import {
   saveChatProfile,
   type ChatProfile,
 } from "./profile";
+
+import {
+  CHAT_EMOTES,
+  CHAT_GIFS,
+  getChatEmote,
+  getChatGif,
+} from "./emotes";
 
 export async function createChat() {
   try {
@@ -246,24 +255,66 @@ export async function createChat() {
 
         <div id="smonk-messages"></div>
 
+        <div
+          id="smonk-emote-panel"
+          class="smonk-emote-panel"
+          hidden
+        >
+          <div class="smonk-emote-tabs">
+
+            <button
+              id="smonk-emote-tab"
+              class="smonk-emote-tab active"
+              type="button"
+            >
+              EMOTES
+            </button>
+
+            <button
+              id="smonk-gif-tab"
+              class="smonk-emote-tab"
+              type="button"
+            >
+              GIFS
+            </button>
+
+          </div>
+
+          <div
+            id="smonk-emote-grid"
+            class="smonk-emote-grid"
+          ></div>
+        </div>
 
         <form id="smonk-chat-form">
 
-          <input
-            id="smonk-message-input"
-            type="text"
-            maxlength="250"
-            autocomplete="off"
-            placeholder="Escribe un mensaje..."
-          />
+    <input
+      id="smonk-message-input"
+      type="text"
+      maxlength="250"
+      autocomplete="off"
+      placeholder="Escribe un mensaje..."
+    />
 
+    <button
+      id="smonk-emote-button"
+      type="button"
+      title="Emotes y GIFs"
+      aria-label="Emotes y GIFs"
+    >
+      <img
+        src="https://smonk-radio-web.vercel.app/chat/emotes/dinolove.png"
+        alt=""
+        class="smonk-emote-button-icon"
+      />
+    </button>
 
-          <button
-            type="submit"
-            title="Enviar mensaje"
-          >
-            ➤
-          </button>
+    <button
+      type="submit"
+      title="Enviar mensaje"
+    >
+      ➤
+    </button>
 
         </form>
 
@@ -378,6 +429,30 @@ export async function createChat() {
         "#smonk-message-input"
       )!;
 
+    const emoteButton =
+      chat.querySelector<HTMLButtonElement>(
+        "#smonk-emote-button"
+      )!;
+
+    const emotePanel =
+      chat.querySelector<HTMLElement>(
+        "#smonk-emote-panel"
+      )!;
+
+    const emoteGrid =
+      chat.querySelector<HTMLElement>(
+        "#smonk-emote-grid"
+      )!;
+
+    const emoteTab =
+      chat.querySelector<HTMLButtonElement>(
+        "#smonk-emote-tab"
+      )!;
+
+    const gifTab =
+      chat.querySelector<HTMLButtonElement>(
+        "#smonk-gif-tab"
+      )!;
 
     /* =========================================
        ESTADO
@@ -661,20 +736,95 @@ function renderProfileSelectors() {
       nicknameElement
     );
 
-      /* =========================================
-         TEXTO
-      ========================================= */
+    /* =========================================
+       TEXTO
+    ========================================= */
 
-      const text =
-        document.createElement("div");
+    const text =
+      document.createElement("div");
 
-      text.className =
-        "smonk-message-text";
+    text.className =
+      "smonk-message-text";
 
+
+    /* =========================================
+      CONTENIDO DEL MENSAJE
+    ========================================= */
+
+    const messageType =
+      data.type ?? "text";
+
+
+    if (messageType === "emote") {
+      const emote =
+        getChatEmote(data.message);
+
+      if (emote) {
+        const image =
+          document.createElement("img");
+
+        image.className =
+          "smonk-chat-emote";
+
+        image.src =
+          emote.src;
+
+        image.alt =
+          data.message;
+
+        image.title =
+          data.message;
+
+        image.loading =
+          "lazy";
+
+        image.draggable =
+          false;
+
+        text.appendChild(image);
+      } else {
+        text.textContent =
+          data.message;
+      }
+
+    } else if (messageType === "gif") {
+      const gif =
+        getChatGif(data.message);
+
+      if (gif) {
+        const image =
+          document.createElement("img");
+
+        image.className =
+          "smonk-chat-gif";
+
+        image.src =
+          gif.src;
+
+        image.alt =
+          data.message;
+
+        image.title =
+          data.message;
+
+        image.loading =
+          "lazy";
+
+        image.draggable =
+          false;
+
+        text.appendChild(image);
+      } else {
+        text.textContent =
+          data.message;
+      }
+
+    } else {
+      // Mensaje normal.
       // textContent evita inyección HTML/JS.
       text.textContent =
         data.message;
-
+    }
 
       /* =========================================
          HORA
@@ -1080,6 +1230,152 @@ function renderProfileSelectors() {
         }
 
         openChat();
+      }
+    );
+
+    /* =========================================
+    EMOTES / GIFS
+    ========================================= */
+
+    type MediaTab =
+      | "emotes"
+      | "gifs";
+
+    let activeMediaTab: MediaTab =
+      "emotes";
+
+
+    function renderMediaPicker() {
+      emoteGrid.innerHTML = "";
+
+      const items =
+        activeMediaTab === "emotes"
+          ? CHAT_EMOTES
+          : CHAT_GIFS;
+
+      items.forEach((item) => {
+        const button =
+          document.createElement("button");
+
+        button.type = "button";
+
+        button.className =
+          "smonk-emote-option";
+
+        button.title =
+          item.id;
+
+
+        const image =
+          document.createElement("img");
+
+        image.src =
+          item.src;
+
+        image.alt =
+          item.id;
+
+        image.loading =
+          "lazy";
+
+        image.draggable =
+          false;
+
+
+        button.appendChild(image);
+
+        button.addEventListener(
+          "click",
+          async () => {
+            if (!user || !nickname) {
+              return;
+            }
+
+            button.disabled = true;
+
+            try {
+              if (activeMediaTab === "emotes") {
+                await sendEmote({
+                  uid: user.uid,
+                  nickname,
+                  emoteId: item.id,
+                  color: profile.color,
+                  icon: profile.icon,
+                });
+              } else {
+                await sendGif({
+                  uid: user.uid,
+                  nickname,
+                  gifId: item.id,
+                  color: profile.color,
+                  icon: profile.icon,
+                });
+              }
+
+              emotePanel.hidden = true;
+
+            } catch (error) {
+              console.error(
+                "❌ No se pudo enviar el emote/GIF:",
+                error
+              );
+            } finally {
+              button.disabled = false;
+            }
+          }
+        );
+
+        emoteGrid.appendChild(
+          button
+        );
+      });
+    }
+
+
+    function selectMediaTab(
+      tab: MediaTab
+    ) {
+      activeMediaTab = tab;
+
+      emoteTab.classList.toggle(
+        "active",
+        tab === "emotes"
+      );
+
+      gifTab.classList.toggle(
+        "active",
+        tab === "gifs"
+      );
+
+      renderMediaPicker();
+    }
+
+
+    emoteButton.addEventListener(
+      "click",
+      () => {
+        emotePanel.hidden =
+          !emotePanel.hidden;
+
+        if (!emotePanel.hidden) {
+          renderMediaPicker();
+        }
+      }
+    );
+
+
+    emoteTab.addEventListener(
+      "click",
+      () => {
+        selectMediaTab("emotes");
+      }
+    );
+
+
+    gifTab.addEventListener(
+      "click",
+      () => {
+        selectMediaTab("gifs");
       }
     );
 
