@@ -84,3 +84,20 @@
   background: rgba(237, 20, 45, 0.16);
   transform: translateY(-2px);
 }
+
+/* Desde 1200px hacia abajo */
+@media (max-width: 1200px) {
+  #smonk-socials {
+    position: absolute;
+
+    left: 50%;
+    top: 1250px;
+    bottom: auto;
+
+    transform: translateX(-50%);
+
+    width: calc(100vw - 28px);
+    max-width: 430px;
+    min-width: 0;
+  }
+}
