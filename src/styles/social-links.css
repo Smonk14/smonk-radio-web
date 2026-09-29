@@ -1,13 +1,15 @@
 #smonk-socials {
-  position: fixed;
+  position: absolute;
 
-  /* Antes 35px */
-  left: 70px;
-  bottom: 35px;
+  /* Un poco más hacia la izquierda */
+  left: 45px;
+
+  /* Debajo del chat */
+  top: calc(60% + 250px);
+  bottom: auto;
 
   z-index: 60;
 
-  /* Más compacto */
   width: auto;
   min-width: 285px;
 
@@ -28,14 +30,12 @@
 
 .smonk-socials-title {
   display: block;
-
   margin-bottom: 5px;
 
   color: rgba(255, 255, 255, 0.65);
 
   font-size: 9px;
   font-weight: 900;
-
   letter-spacing: 1.2px;
   text-align: center;
 }
