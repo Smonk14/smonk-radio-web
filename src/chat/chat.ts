@@ -136,7 +136,7 @@ export async function createChat() {
           class="smonk-auth-button smonk-auth-guest"
           type="button"
         >
-          👤 ENTRAR COMO INVITADO
+          ENTRAR COMO INVITADO
         </button>
 
 
@@ -1075,7 +1075,7 @@ function renderProfileSelectors() {
             false;
 
           guestButton.textContent =
-            "👤 ENTRAR COMO INVITADO";
+            "ENTRAR COMO INVITADO";
         }
       }
     );
