@@ -1464,3 +1464,41 @@
   object-fit: contain !important;
   user-select: none !important;
 }
+
+#smonk-chat #smonk-emote-button {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+
+  padding: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  overflow: hidden !important;
+
+  border: none !important;
+  border-radius: 10px !important;
+
+  background: rgba(255, 255, 255, 0.06) !important;
+
+  cursor: pointer !important;
+}
+
+#smonk-chat #smonk-emote-button .smonk-emote-button-icon {
+  display: block !important;
+
+  width: 30px !important;
+  height: 30px !important;
+  max-width: 30px !important;
+  max-height: 30px !important;
+
+  object-fit: contain !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  pointer-events: none !important;
+}
