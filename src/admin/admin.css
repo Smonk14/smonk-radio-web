@@ -717,3 +717,147 @@ body {
   }
 
 }
+
+/* =========================================
+   ADMIN LOGIN
+========================================= */
+
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.admin-login__card {
+  width: min(100%, 380px);
+  padding: 32px;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(237, 20, 45, 0.1),
+      transparent 45%
+    ),
+    rgba(20, 21, 26, 0.96);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(237, 20, 45, 0.06);
+}
+
+.admin-login__card h1 {
+  margin: 4px 0 0;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.admin-login__card > p {
+  margin: 8px 0 25px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+}
+
+#admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-login__error {
+  min-height: 18px;
+  margin: 0;
+  color: #ff4055;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+
+/* =========================================
+   HEADER ACTIONS
+========================================= */
+
+.admin__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.admin__logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 10px 16px;
+
+  border: 1px solid rgba(237, 20, 45, 0.25);
+  border-radius: 10px;
+
+  background: rgba(237, 20, 45, 0.08);
+
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.admin__logout::before {
+  content: "↪";
+  font-size: 15px;
+}
+
+.admin__logout:hover {
+  background: rgba(237, 20, 45, 0.16);
+  border-color: rgba(237, 20, 45, 0.5);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.admin__logout:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .admin-login {
+    padding: 16px;
+  }
+
+  .admin-login__card {
+    width: 100%;
+    padding: 26px 20px;
+  }
+
+  .admin__header-actions {
+    gap: 8px;
+  }
+
+  .admin__logout {
+    padding: 9px 11px;
+    font-size: 9px;
+  }
+}
