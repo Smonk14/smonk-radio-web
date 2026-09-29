@@ -1,6 +1,6 @@
-/* =========================
+/* =========================================
    SMONK RADIO ADMIN
-   ========================= */
+========================================= */
 
 * {
   box-sizing: border-box;
@@ -34,20 +34,21 @@ body {
     sans-serif;
 }
 
-/* =========================
-   CONTENEDOR
-   ========================= */
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
 
 .admin {
-  width: min(760px, calc(100% - 32px));
+  width: min(1450px, calc(100% - 48px));
   margin: 0 auto;
-
-  padding: 60px 0;
+  padding: 45px 0 60px;
 }
 
-/* =========================
+
+/* =========================================
    HEADER
-   ========================= */
+========================================= */
 
 .admin__header {
   display: flex;
@@ -81,9 +82,10 @@ body {
   letter-spacing: -1px;
 }
 
-/* =========================
-   ESTADO
-   ========================= */
+
+/* =========================================
+   ESTADO LIVE SUPERIOR
+========================================= */
 
 .admin__status {
   padding: 9px 14px;
@@ -110,12 +112,31 @@ body {
 
   color: #ff4055;
 
-  box-shadow: 0 0 20px rgba(237, 20, 45, 0.15);
+  box-shadow:
+    0 0 20px rgba(237, 20, 45, 0.15);
 }
 
-/* =========================
-   CARD
-   ========================= */
+
+/* =========================================
+   DASHBOARD
+========================================= */
+
+.admin__dashboard {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(420px, 0.85fr);
+
+  gap: 24px;
+
+  align-items: start;
+}
+
+
+/* =========================================
+   CARDS
+========================================= */
 
 .admin__card {
   padding: 28px;
@@ -130,17 +151,258 @@ body {
     0 0 40px rgba(237, 20, 45, 0.05);
 }
 
-/* =========================
-   CONTROL LIVE
-   ========================= */
 
-.admin__live-control {
+/* =========================================
+   RADIO / NOW PLAYING
+========================================= */
+
+.radio-card {
+  min-height: 390px;
+}
+
+.radio-card__loading,
+.radio-card__error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 330px;
+
+  color: rgba(255, 255, 255, 0.5);
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   RADIO HEADER
+========================================= */
+
+.radio-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   gap: 20px;
+
+  padding-bottom: 22px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.08);
 }
+
+.radio-card__status {
+  display: block;
+
+  color: #75df9b;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+
+/* =========================================
+   OYENTES
+========================================= */
+
+.radio-card__listeners {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 10px 14px;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+  border:
+    1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 999px;
+
+  font-size: 12px;
+}
+
+.radio-card__listeners strong {
+  color: white;
+
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.radio-card__listeners span {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+
+/* =========================================
+   CANCIÓN
+========================================= */
+
+.radio-card__song {
+  display: flex;
+  align-items: center;
+
+  gap: 22px;
+
+  margin-top: 28px;
+}
+
+.radio-card__cover {
+  width: 130px;
+  height: 130px;
+
+  flex-shrink: 0;
+
+  object-fit: cover;
+
+  border-radius: 16px;
+
+  background:
+    rgba(255, 255, 255, 0.05);
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+.radio-card__cover--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgba(255, 255, 255, 0.4);
+
+  font-size: 40px;
+}
+
+.radio-card__info {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.radio-card__title {
+  display: block;
+
+  overflow: hidden;
+
+  color: white;
+
+  font-size: 24px;
+  font-weight: 900;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.radio-card__artist {
+  display: block;
+
+  margin-top: 5px;
+
+  overflow: hidden;
+
+  color: rgba(255, 255, 255, 0.65);
+
+  font-size: 14px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   PROGRESO CANCIÓN
+========================================= */
+
+.radio-card__progress {
+  height: 7px;
+
+  margin-top: 24px;
+
+  overflow: hidden;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  border-radius: 999px;
+}
+
+.radio-card__progress-bar {
+  height: 100%;
+
+  background: #ed142d;
+
+  border-radius: inherit;
+
+  transition: width 500ms linear;
+}
+
+.radio-card__time {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 7px;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 10px;
+}
+
+
+/* =========================================
+   BOTÓN PASAR CANCIÓN
+========================================= */
+
+.radio-card__skip {
+  width: 100%;
+
+  margin-top: 28px;
+  padding: 14px 18px;
+
+  border:
+    1px solid rgba(237, 20, 45, 0.4);
+
+  border-radius: 12px;
+
+  background:
+    rgba(237, 20, 45, 0.12);
+
+  color: #ff4055;
+
+  font-size: 12px;
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.radio-card__skip:not(:disabled):hover {
+  transform: translateY(-2px);
+
+  background:
+    rgba(237, 20, 45, 0.22);
+
+  box-shadow:
+    0 8px 25px rgba(237, 20, 45, 0.15);
+}
+
+.radio-card__skip:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+
+/* =========================================
+   LABEL GENERAL
+========================================= */
 
 .admin__label {
   display: block;
@@ -157,13 +419,27 @@ body {
   text-transform: uppercase;
 }
 
+
+/* =========================================
+   CONTROL LIVE
+========================================= */
+
+.admin__live-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
 #live-state-text {
   font-size: 18px;
 }
 
-/* =========================
+
+/* =========================================
    BOTÓN LIVE
-   ========================= */
+========================================= */
 
 .admin__live-button {
   min-width: 150px;
@@ -193,36 +469,43 @@ body {
 
   background: #ff2b42;
 
-  box-shadow: 0 8px 25px rgba(237, 20, 45, 0.3);
+  box-shadow:
+    0 8px 25px rgba(237, 20, 45, 0.3);
 }
 
 .admin__live-button--stop {
-  background: rgba(237, 20, 45, 0.12);
+  background:
+    rgba(237, 20, 45, 0.12);
 
-  border: 1px solid rgba(237, 20, 45, 0.4);
+  border:
+    1px solid rgba(237, 20, 45, 0.4);
 
   color: #ff4055;
 }
 
 .admin__live-button--stop:hover {
-  background: rgba(237, 20, 45, 0.2);
+  background:
+    rgba(237, 20, 45, 0.2);
 }
 
-/* =========================
+
+/* =========================================
    DIVISOR
-   ========================= */
+========================================= */
 
 .admin__divider {
   height: 1px;
 
   margin: 26px 0;
 
-  background: rgba(255, 255, 255, 0.08);
+  background:
+    rgba(255, 255, 255, 0.08);
 }
 
-/* =========================
+
+/* =========================================
    FORMULARIO
-   ========================= */
+========================================= */
 
 #live-form {
   display: flex;
@@ -239,7 +522,8 @@ body {
 }
 
 .admin__field span {
-  color: rgba(255, 255, 255, 0.7);
+  color:
+    rgba(255, 255, 255, 0.7);
 
   font-size: 12px;
   font-weight: 800;
@@ -251,9 +535,12 @@ body {
 
   padding: 13px 14px;
 
-  background: rgba(255, 255, 255, 0.05);
+  background:
+    rgba(255, 255, 255, 0.05);
 
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border:
+    1px solid rgba(255, 255, 255, 0.1);
+
   border-radius: 11px;
 
   outline: none;
@@ -277,21 +564,27 @@ body {
 
 .admin__field input::placeholder,
 .admin__field textarea::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color:
+    rgba(255, 255, 255, 0.25);
 }
 
 .admin__field input:focus,
 .admin__field textarea:focus {
-  background: rgba(255, 255, 255, 0.07);
+  background:
+    rgba(255, 255, 255, 0.07);
 
-  border-color: rgba(237, 20, 45, 0.7);
+  border-color:
+    rgba(237, 20, 45, 0.7);
 
-  box-shadow: 0 0 0 3px rgba(237, 20, 45, 0.1);
+  box-shadow:
+    0 0 0 3px
+    rgba(237, 20, 45, 0.1);
 }
 
-/* =========================
+
+/* =========================================
    GUARDAR
-   ========================= */
+========================================= */
 
 .admin__save {
   margin-top: 5px;
@@ -334,11 +627,26 @@ body {
   text-align: center;
 }
 
-/* =========================
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .admin__dashboard {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================
    MOBILE
-   ========================= */
+========================================= */
 
 @media (max-width: 600px) {
+
   .admin {
     width: calc(100% - 24px);
 
@@ -358,6 +666,47 @@ body {
     padding: 20px;
   }
 
+
+  /* RADIO */
+
+  .radio-card {
+    min-height: auto;
+  }
+
+  .radio-card__header {
+    align-items: flex-start;
+  }
+
+  .radio-card__listeners {
+    padding: 8px 10px;
+  }
+
+  .radio-card__song {
+    align-items: flex-start;
+
+    gap: 15px;
+
+    margin-top: 22px;
+  }
+
+  .radio-card__cover {
+    width: 85px;
+    height: 85px;
+
+    border-radius: 12px;
+  }
+
+  .radio-card__title {
+    font-size: 18px;
+  }
+
+  .radio-card__progress {
+    margin-top: 15px;
+  }
+
+
+  /* LIVE */
+
   .admin__live-control {
     align-items: stretch;
     flex-direction: column;
@@ -366,4 +715,5 @@ body {
   .admin__live-button {
     width: 100%;
   }
+
 }
