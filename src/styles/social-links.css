@@ -90,14 +90,14 @@
   #smonk-socials {
     position: absolute;
 
-    left: 50%;
+    left: 60%;
     top: 1120px;
     bottom: auto;
 
     transform: translateX(-50%);
 
     width: calc(100vw - 28px);
-    max-width: 430px;
+    max-width: 410px;
     min-width: 0;
   }
 }
