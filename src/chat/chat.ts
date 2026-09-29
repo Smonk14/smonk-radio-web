@@ -107,7 +107,7 @@ export async function createChat() {
 
         <div class="smonk-chat-welcome">
 
-          <strong>¡PE PE PEROOO! 🔥</strong>
+          <strong>¡PE PE PEROOO!</strong>
 
           <span>
             Únete al chat de Smonk Radio
